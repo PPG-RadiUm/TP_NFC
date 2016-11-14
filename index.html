@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>TP NFC by PPG-RadiUm</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>TP NFC</h1>
+        <p>TP NFC en Android</p>
+        <p class="view"><a href="https://github.com/PPG-RadiUm/TP_NFC">View the Project on GitHub <small>PPG-RadiUm/TP_NFC</small></a></p>
+        <ul>
+          <li><a href="https://github.com/PPG-RadiUm/TP_NFC/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/PPG-RadiUm/TP_NFC/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/PPG-RadiUm/TP_NFC">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="tp-nfc" class="anchor" href="#tp-nfc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TP NFC</h1>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
+
+<h3>
+<a id="quest-ce-que-le-nfc-" class="anchor" href="#quest-ce-que-le-nfc-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Qu’est ce que le NFC ?</h3>
+
+<p>Le NFC, ou Near Fields Communication (Communication en champ rapproché) est une technologie de communication sans fil à courte portée et à haute fréquence, permettant l'échange d'informations entre des périphériques jusqu'à une distance d'environ 10 cm.
+C’est une forme de RFID (Radio Frequency IDentification), cependant la distance d’échange de données est bien moins importantes que la plupart des autres dispositifs RFID, qui est de 2m à 10m généralement.</p>
+
+<p>On distingue trois types de fonctionnement des équipements NFC (Ou étiquettes/tags) : </p>
+
+<ul>
+<li>Le mode émulation de carte</li>
+<li>Le mode lecteur</li>
+<li>Le mode Peer-to-Peer
+En mode émulation de carte, le device NFC est dit “passif” : il se comporte comme une carte à puce sans contact et est donc cible des autres devices NFC.
+En mode lecteur, le device NFC émet un champ magnétique pour initier la communication avec un tag NFC et lui envoie une commande. C’est un fonctionnement de lecteur de carte et le device est dit “actif” car il envoie des informations.
+En mode Peer-to-Peer les deux devices NFC prennent tours à tours le rôle “émulateur de carte” et “lecteur”, ils communiquent entre eux et s’échange des informations. C’est l’utilisation que nous pouvons avoir en échangeant des coordonnées GPS par Google Maps par exemple, en collant dos à dos les smartphones.</li>
+</ul>
+
+<h3>
+<a id="mais-à-quoi-ça-sert-concrètement-" class="anchor" href="#mais-%C3%A0-quoi-%C3%A7a-sert-concr%C3%A8tement-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mais à quoi ça sert concrètement ?</h3>
+
+<p>Le NFC permet d’échanger des données entre deux appareils équipés.
+Les utilisations les plus répandues sont :
+Paiement : Le paiement sans contact des cartes bancaires ou étudiantes (IZLI et l’ancienne également)
+Passe/identification : Ouvrir des portes, ...
+Échange de données : Échanger des contacts deux smartphones dos à dos
+…</p>
+
+<p>Sur un appareil android il existe des applications dédiés pour lire/écrire sur un tag NFC, définir des actions à la suite de la lecture d’un tag NFC, …
+Sur des applications comme Google Maps, nous pouvons échanger les coordonnées marqués d’un device à un autre.</p>
+
+<h2>
+<a id="objectifs-du-tp" class="anchor" href="#objectifs-du-tp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Objectifs du TP</h2>
+
+<p>L’objectif de ce TP est de se familiariser avec l’utilisation du NFC sur Android.
+Nous verrons comment activer le NFC (si l’appareil le permet) et comment recevoir des intents au contact d’un tag NFC (nous utiliserons la carte étudiants ;) ).
+Déroulement du TP</p>
+
+<h3>
+<a id="initialisation-du-projet" class="anchor" href="#initialisation-du-projet" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Initialisation du projet</h3>
+
+<p>On va tout d’abord créer un projet sous Android Studio en sélectionnant l’API 10 minimum visant Android 2.3.3 puis en choisissant “Empty Activity”.
+Commençons par paramétrer notre application pour manipuler le NFC.
+Dans AndroidManifest.xml, ajoutez ces lignes :</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">uses-permission</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>android.permission.NFC<span class="pl-pds">"</span></span>/&gt;
+&lt;<span class="pl-ent">uses-feature</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>android.hardware.nfc<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">required</span>=<span class="pl-s"><span class="pl-pds">"</span>false<span class="pl-pds">"</span></span>/&gt;</pre></div>
+
+<p>Ces lignes permettent de demander l’utilisation du NFC s’il est disponible sur l’appareil et interdisent l’affichage dans le playstore de notre application aux devices n’étant pas équipé du NFC.</p>
+
+<h3>
+<a id="vérification-de-la-compatibilité-et-de-lactivation-du-nfc" class="anchor" href="#v%C3%A9rification-de-la-compatibilit%C3%A9-et-de-lactivation-du-nfc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Vérification de la compatibilité et de l’activation du NFC</h3>
+
+<p>Direction MainActivity.java. Le but va être maintenant de vérifier si l’appareil possède le NFC et s’il le possède, savoir s’il est activé. Pour cela nous allons copier ces lignes dans le onCreate :</p>
+
+<div class="highlight highlight-source-java"><pre>nfcAdapter <span class="pl-k">=</span> <span class="pl-smi">NfcAdapter</span><span class="pl-k">.</span>getDefaultAdapter(<span class="pl-v">this</span>);
+textView <span class="pl-k">=</span> (<span class="pl-smi">TextView</span>) findViewById(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>textView);</pre></div>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// Vérifie si l'appareil a le NFC activé et s'il est activé</span>
+<span class="pl-k">if</span>(nfcAdapter <span class="pl-k">==</span> <span class="pl-c1">null</span>){
+   <span class="pl-smi">Toast</span><span class="pl-k">.</span>makeText(<span class="pl-v">this</span>, <span class="pl-s"><span class="pl-pds">"</span>NFC n'est pas disponible :'(<span class="pl-pds">"</span></span>, <span class="pl-smi">Toast</span><span class="pl-c1"><span class="pl-k">.</span>LENGTH_LONG</span>)<span class="pl-k">.</span>show();
+}<span class="pl-k">else</span> <span class="pl-k">if</span>(nfcAdapter<span class="pl-k">.</span>isEnabled()){
+   <span class="pl-smi">Toast</span><span class="pl-k">.</span>makeText(<span class="pl-v">this</span>, <span class="pl-s"><span class="pl-pds">"</span>NFC activé<span class="pl-pds">"</span></span>, <span class="pl-smi">Toast</span><span class="pl-c1"><span class="pl-k">.</span>LENGTH_LONG</span>)<span class="pl-k">.</span>show();
+}<span class="pl-k">else</span>{
+   <span class="pl-smi">Toast</span><span class="pl-k">.</span>makeText(<span class="pl-v">this</span>, <span class="pl-s"><span class="pl-pds">"</span>NFC non activé<span class="pl-pds">"</span></span>, <span class="pl-smi">Toast</span><span class="pl-c1"><span class="pl-k">.</span>LENGTH_LONG</span>)<span class="pl-k">.</span>show();
+}</pre></div>
+
+<p>Sur le code ci-dessus, on vérifie dans le premier if si notre nfcAdapter est égal à null, auquel cas celà voudrait dire que notre appareil ne prend pas en charge NFC.
+Ensuite le else if est pour le cas ou le nfcAdapter est différent de null et est activé. Enfin le else pour le cas ou le NFC n’est pas activé.</p>
+
+<p>Rien ne vous échappe … Effectivement, nous n’avons pas instancié notre variable nfcAdapter. Nous plaçons donc la ligne ci-dessous au dessus de la méthode onCreate, toujours dans notre MainActivity.java. Nous parlerons par la suite de la variable textView.</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">NfcAdapter</span> nfcAdapter;
+<span class="pl-smi">TextView</span> textView;</pre></div>
+
+<h3>
+<a id="réception-dun-intent-nfc" class="anchor" href="#r%C3%A9ception-dun-intent-nfc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Réception d’un intent NFC</h3>
+
+<p>A partir d’ici, vous pouvez d’ores et déjà tester l’application pour savoir si votre appareil est compatible NFC. Maintenant que notre objet NFC est initialisé et que nous sommes au courant de la compatibilité et de la mise en marche de notre NFC, nous pouvons maintenant être signalé lors d’un contact avec un tag NFC.</p>
+
+<p>Pour cela nous allons écrire trois méthodes :</p>
+
+<ul>
+<li>onResume</li>
+<li>onPause</li>
+<li>onNewIntent</li>
+</ul>
+
+<p>Copiez-collez ce code correspondant à la méthode onResume (toujours dans MainActivity.java) :</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@Override</span>
+<span class="pl-k">protected</span> <span class="pl-k">void</span> onResume() {
+   <span class="pl-smi">Intent</span> intent <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">Intent</span>(<span class="pl-v">this</span>, <span class="pl-smi">MainActivity</span><span class="pl-k">.</span>class);
+   intent<span class="pl-k">.</span>addFlags(<span class="pl-smi">Intent</span><span class="pl-c1"><span class="pl-k">.</span>FLAG_RECEIVER_REPLACE_PENDING</span>);
+
+   <span class="pl-smi">PendingIntent</span> pendingIntent <span class="pl-k">=</span> <span class="pl-smi">PendingIntent</span><span class="pl-k">.</span>getActivity(<span class="pl-v">this</span>, <span class="pl-c1">0</span>, intent, <span class="pl-c1">0</span>);
+   <span class="pl-k">IntentFilter</span>[] intentFilter <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">IntentFilter</span>[]{};
+
+   <span class="pl-k">if</span>(nfcAdapter <span class="pl-k">!=</span> <span class="pl-c1">null</span>) {
+       nfcAdapter<span class="pl-k">.</span>enableForegroundDispatch(<span class="pl-v">this</span>, pendingIntent, intentFilter, <span class="pl-c1">null</span>);
+   }
+
+   <span class="pl-v">super</span><span class="pl-k">.</span>onResume();
+}</pre></div>
+
+<p>Dans le code ci-dessus nous créons l’intent et ensuite nous vérifions que le NFC est disponible sur l’appareil pour utiliser la méthode enableForegroundDispatch pour activer la réceptions de tags NFC pour l’activity en question.</p>
+
+<p>Ensuite copiez ce code à la suite du précédent :</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@Override</span>
+<span class="pl-k">protected</span> <span class="pl-k">void</span> onPause() {
+   <span class="pl-k">if</span>(nfcAdapter <span class="pl-k">!=</span> <span class="pl-c1">null</span>) {
+       nfcAdapter<span class="pl-k">.</span>disableForegroundDispatch(<span class="pl-v">this</span>);
+   }
+
+   <span class="pl-v">super</span><span class="pl-k">.</span>onPause();
+}</pre></div>
+
+<p>Ce code contenant la méthode contraire à enableForegroundDispatch désactive la reception de tag NFC pour cette activity.</p>
+
+<p>Enfin, la méthode gérant l’action à la suite de la réception d’un intent d’un tag NFC :</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@Override</span>
+<span class="pl-k">protected</span> <span class="pl-k">void</span> onNewIntent(<span class="pl-smi">Intent</span> intent) {
+   <span class="pl-c">// Permet de notifier la reconnaissance d'un TAG NFC</span>
+   <span class="pl-smi">Toast</span><span class="pl-k">.</span>makeText(<span class="pl-v">this</span>, <span class="pl-s"><span class="pl-pds">"</span>NFC intent reçu!<span class="pl-pds">"</span></span>, <span class="pl-smi">Toast</span><span class="pl-c1"><span class="pl-k">.</span>LENGTH_LONG</span>)<span class="pl-k">.</span>show();
+
+textView <span class="pl-k">=</span> (<span class="pl-smi">TextView</span>) findViewById(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>textView);
+textView<span class="pl-k">.</span>setText(textView<span class="pl-k">.</span>getText() <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span> <span class="pl-k">+</span> formatTimeToFrance());
+
+   <span class="pl-v">super</span><span class="pl-k">.</span>onNewIntent(intent);
+}</pre></div>
+
+<p>Dans ce code, nous envoyons tout simplement un toast à l’activity, et nous affichons dans le textView (le fameux textView du début) l’heure à laquelle nous avons reçu l’intent grâce à une fonction que nous allons implémenté juste après notre textView. </p>
+
+<p>Nous allons donc rajouter notre textView. Direction activity_main.xml :</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">TextView</span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_width</span>=<span class="pl-s"><span class="pl-pds">"</span>wrap_content<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_height</span>=<span class="pl-s"><span class="pl-pds">"</span>wrap_content<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_alignParentTop</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_alignParentLeft</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_alignParentStart</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>@+id/textView<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_alignParentRight</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_alignParentEnd</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">layout_alignParentBottom</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
+   <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">text</span>=<span class="pl-s"><span class="pl-pds">"</span>Intent reçus: <span class="pl-pds">"</span></span> /&gt;</pre></div>
+
+<p>Il nous faut donc maintenant la magnifique fonction formatTimeToFrance :
+(Il existe des méthodes plus “sympa” pour formater une date mais elle nécessitent des API plus élevés. Pour l’usage du TP, cette fonction fera l’affaire :) ).</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// Cocorico</span>
+<span class="pl-k">protected</span> <span class="pl-smi">String</span> formatTimeToFrance() {
+   <span class="pl-k">long</span> millis <span class="pl-k">=</span> <span class="pl-smi">System</span><span class="pl-k">.</span>currentTimeMillis();
+   <span class="pl-k">return</span> <span class="pl-smi">String</span><span class="pl-k">.</span>format(<span class="pl-s"><span class="pl-pds">"</span>%02d:%02d:%02d<span class="pl-pds">"</span></span>, (<span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>MILLISECONDS</span><span class="pl-k">.</span>toHours(millis) <span class="pl-k">%</span> <span class="pl-c1">24</span>) <span class="pl-k">+</span> <span class="pl-c1">1</span>,
+           <span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>MILLISECONDS</span><span class="pl-k">.</span>toMinutes(millis) <span class="pl-k">-</span> <span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>HOURS</span><span class="pl-k">.</span>toMinutes(<span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>MILLISECONDS</span><span class="pl-k">.</span>toHours(millis)),
+           <span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>MILLISECONDS</span><span class="pl-k">.</span>toSeconds(millis) <span class="pl-k">-</span> <span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>MINUTES</span><span class="pl-k">.</span>toSeconds(<span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>MILLISECONDS</span><span class="pl-k">.</span>toMinutes(millis)));
+}</pre></div>
+
+<p>Vous pouvez tester à nouveau l’application (si vous disposez du NFC c’est plus intéressant) et passer votre carte étudiant (ou carte bancaire, passeport; …) derrière votre appareil Android. Vous constaterez un joli toast qui spécifie que votre appareil reconnaît la carte comme un tag NFC et vous avez un historique des intents.</p>
+
+<h2>
+<a id="fin-du-tp" class="anchor" href="#fin-du-tp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fin du TP</h2>
+
+<p>Merci de votre attention, j'espère que ce TP vous aura plu et que vous aurez appris des choses.
+Pour conclure je dirais que le NFC n’est pas encore très répandu et connu des utilisateurs, même ceux qui disposent du NFC mais les possibilités sont nombreuses. 
+Cette technologie peut faciliter le transfert de petites informations et donne accès à de nouveaux moyens de partage rapides.
+Pour plus de renseignements je vous invite à consulter la doc Android Developpers sur le sujet du NFC : <a href="https://developer.android.com/guide/topics/connectivity/nfc/nfc.html">https://developer.android.com/guide/topics/connectivity/nfc/nfc.html</a>
+Voici la liste des téléphones compatibles NFC : <a href="http://www.nfcworld.com/nfc-phones-list/">http://www.nfcworld.com/nfc-phones-list/</a></p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/PPG-RadiUm">PPG-RadiUm</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
