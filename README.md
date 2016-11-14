@@ -30,12 +30,13 @@ Sur des applications comme Google Maps, nous pouvons échanger les coordonnées 
 ## Objectifs du TP
 L’objectif de ce TP est de se familiariser avec l’utilisation du NFC sur Android.
 Nous verrons comment activer le NFC (si l’appareil le permet) et comment recevoir des intents au contact d’un tag NFC (nous utiliserons la carte étudiants ;) ).
-Déroulement du TP
+
+## Déroulement du TP
 
 ### Initialisation du projet
 On va tout d’abord créer un projet sous Android Studio en sélectionnant l’API 10 minimum visant Android 2.3.3 puis en choisissant “Empty Activity”.
 Commençons par paramétrer notre application pour manipuler le NFC.
-Dans AndroidManifest.xml, ajoutez ces lignes :
+Dans *AndroidManifest.xml*, ajoutez ces lignes :
 
 ```xml
 <uses-permission android:name="android.permission.NFC"/>
@@ -48,7 +49,7 @@ Ces lignes permettent de demander l’utilisation du NFC s’il est disponible s
 ### Vérification de la compatibilité et de l’activation du NFC
 
 
-Direction MainActivity.java. Le but va être maintenant de vérifier si l’appareil possède le NFC et s’il le possède, savoir s’il est activé. Pour cela nous allons copier ces lignes dans le onCreate :
+Direction *MainActivity.java*. Le but va être maintenant de vérifier si l’appareil possède le NFC et s’il le possède, savoir s’il est activé. Pour cela nous allons copier ces lignes dans le *onCreate* :
 
 ```java
 nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -66,11 +67,11 @@ if(nfcAdapter == null){
 }
 ```
 
-Sur le code ci-dessus, on vérifie dans le premier if si notre nfcAdapter est égal à null, auquel cas celà voudrait dire que notre appareil ne prend pas en charge NFC.
-Ensuite le else if est pour le cas ou le nfcAdapter est différent de null et est activé. Enfin le else pour le cas ou le NFC n’est pas activé.
+Sur le code ci-dessus, on vérifie dans le premier if si notre *nfcAdapter* est égal à null, auquel cas celà voudrait dire que notre appareil ne prend pas en charge NFC.
+Ensuite le else if est pour le cas ou le *nfcAdapter* est différent de null et est activé. Enfin le else pour le cas ou le NFC n’est pas activé.
 
 
-Rien ne vous échappe … Effectivement, nous n’avons pas instancié notre variable nfcAdapter. Nous plaçons donc la ligne ci-dessous au dessus de la méthode onCreate, toujours dans notre MainActivity.java. Nous parlerons par la suite de la variable textView.
+Rien ne vous échappe … Effectivement, nous n’avons pas instancié notre variable *nfcAdapter*. Nous plaçons donc la ligne ci-dessous au dessus de la méthode onCreate, toujours dans notre *MainActivity.java*. Nous parlerons par la suite de la variable *textView*.
 
 ```java
 NfcAdapter nfcAdapter;
@@ -89,7 +90,7 @@ Pour cela nous allons écrire trois méthodes :
 - onNewIntent
 
 
-Copiez-collez ce code correspondant à la méthode onResume (toujours dans MainActivity.java) :
+Copiez-collez ce code correspondant à la méthode onResume (toujours dans *MainActivity.java*) :
 
 ```java
 @Override
@@ -109,7 +110,7 @@ protected void onResume() {
 ```
 
 
-Dans le code ci-dessus nous créons l’intent et ensuite nous vérifions que le NFC est disponible sur l’appareil pour utiliser la méthode enableForegroundDispatch pour activer la réceptions de tags NFC pour l’activity en question.
+Dans le code ci-dessus nous créons l’intent et ensuite nous vérifions que le NFC est disponible sur l’appareil pour utiliser la méthode *enableForegroundDispatch* pour activer la réceptions de tags NFC pour l’activity en question.
 
 
 Ensuite copiez ce code à la suite du précédent :
@@ -125,7 +126,7 @@ protected void onPause() {
 }
 ```
 
-Ce code contenant la méthode contraire à enableForegroundDispatch désactive la reception de tag NFC pour cette activity.
+Ce code contenant la méthode contraire à *enableForegroundDispatch* désactive la reception de tag NFC pour cette activity.
 
 
 Enfin, la méthode gérant l’action à la suite de la réception d’un intent d’un tag NFC :
@@ -146,7 +147,7 @@ textView.setText(textView.getText() + "\n" + formatTimeToFrance());
 Dans ce code, nous envoyons tout simplement un toast à l’activity, et nous affichons dans le textView (le fameux textView du début) l’heure à laquelle nous avons reçu l’intent grâce à une fonction que nous allons implémenté juste après notre textView. 
 
 
-Nous allons donc rajouter notre textView. Direction activity_main.xml :
+Nous allons donc rajouter notre textView. Direction *activity_main.xml* :
 
 ```xml
 <TextView
@@ -162,7 +163,7 @@ Nous allons donc rajouter notre textView. Direction activity_main.xml :
    android:text="Intent reçus: " />
 ```
 
-Il nous faut donc maintenant la magnifique fonction formatTimeToFrance :
+Il nous faut donc maintenant la magnifique fonction *formatTimeToFrance* :
 (Il existe des méthodes plus “sympa” pour formater une date mais elle nécessitent des API plus élevés. Pour l’usage du TP, cette fonction fera l’affaire :) ).
 
 ```java
