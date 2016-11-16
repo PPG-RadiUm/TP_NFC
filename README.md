@@ -10,6 +10,7 @@ On distingue trois types de fonctionnement des équipements NFC (Ou étiquettes/
 - Le mode émulation de carte
 - Le mode lecteur
 - Le mode Peer-to-Peer
+
 En mode émulation de carte, le device NFC est dit “passif” : il se comporte comme une carte à puce sans contact et est donc cible des autres devices NFC.
 En mode lecteur, le device NFC émet un champ magnétique pour initier la communication avec un tag NFC et lui envoie une commande. C’est un fonctionnement de lecteur de carte et le device est dit “actif” car il envoie des informations.
 En mode Peer-to-Peer les deux devices NFC prennent tours à tours le rôle “émulateur de carte” et “lecteur”, ils communiquent entre eux et s’échange des informations. C’est l’utilisation que nous pouvons avoir en échangeant des coordonnées GPS par Google Maps par exemple, en collant dos à dos les smartphones.
